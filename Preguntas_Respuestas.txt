@@ -1,0 +1,20 @@
+¿Cómo se llaman las células nerviosas?:Neuronas:Nerviositos;
+¿Qué es más valioso, un brillante o un diamante?:Brillante:Diamante;
+¿Cuál es el pájaro símbolo de la paz?:Paloma:Urraca;
+¿En qué mes el sol está más cerca de la Tierra?:Diciembre:Junio;
+¿En qué parte del cuerpo se encuentra la piel más gruesa?:Espalda:Nariz;
+¿A qué le tiene miedo una persona que sufre vértigo?:A las alturas:A los versículos;
+¿Cómo se llama la ciencia que estudia la sangre?:Hematología:Sangrilogía;
+¿Qué fabricó Alessandro Volta, por primera vez, en 1800?:Pila:Linterna;
+¿Cuál de los cinco sentidos se desarrolla el primero?:Olfato:Tacto;
+¿Cuál es el dedo más sensible de la mano?:Índice:Corazón;
+¿Qué pieza de ajedrez puede hacer un movimiento en forma de L?:Caballo:Reina;
+¿Cómo se llaman los deportistas que practican el judo?:Judokas:Judistas;
+¿Qué deporte practican los Harlem Globetrotters?:Baloncesto:Rugby;
+¿A cuántos puntos se disputa un set en el tenis de mesa?:Ventiuno:Quince;
+¿Qué obtienes si añades fruta fresca al vino tinto?:Sangría:Mermelada;
+¿A qué equipo de fútbol pertenecía el estadio Metropolitano?:Atlético de Madrid:Athletic Bilbao;
+¿En qué país se encuentra el circuito de Le Mans?:Francia:Italia;
+¿Quién fueron los finalistas de baloncesto en los Juegos Olímpicos de Los Ángeles de 1984?:España y EEUU:España y Rusia;
+¿Cuál era el nombre anterior de Muhammad Alí?:Cassius Clay:Larry Holmes;
+¿Cuántos jugadores tiene un equipo de voleibol?:Seis:Siete

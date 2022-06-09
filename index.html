@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Trivial</title>
+    <style>
+        body {
+            background-color: #f2f2f2;
+            text-align: center;
+
+        }
+        
+        .boton:first-child {
+            margin: 100px;
+        }
+
+        .ocultos {
+            border: 2px solid black;
+        }
+
+        .boton {
+            background-color: blueviolet;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
+        .boton:hover {
+            background-color: darkblue;
+        }
+
+        .correcta, .correcta:hover {
+            background-color: green
+        }
+
+        .incorrecta, .incorrecta:hover {
+            background-color: red
+        }
+
+        .oculto {
+            display: none;
+        }
+
+        .visible {
+            display: block;
+        }
+
+        #tiempo {
+            display: inline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="comenzar" class="boton">Comenzar Trivial</div>
+    <section id="ocultos" class="oculto">
+        <span>Tiempo: </span>
+        <div id="tiempo">2</div>
+        <p class="pyr"></p> <!-- Pregunta -->
+        <p class="boton pyr"></p> <!-- Respuesta1 -->
+        <p class="boton pyr"></p> <!-- Respuesta2 -->
+    </section>
+    <p class="pyr oculto"></p> <!-- Mensaje de fin de partida -->
+
+
+    <script>
+        // Parámetros del archivo
+        let archivoTxt;
+        let archivoTxtCopia;
+        let ruta = "Preguntas_Respuestas.txt";
+        let preguntasYRespuestas = new Array(); //Array de arrays, cada uno: 0 Pregunta 1 y 2 Respuesta
+        let copiaPreguntas; //Copia de preguntasYRespuestas en cada partida
+        let respuestasCorrectas = []; //1 o 2
+        let copiaRespuestasCorrectas; //Copia de respuestasCorrectas en cada partida
+        let numeroPregunta;
+        let respuestaUno;
+
+        // Parámetros del html
+        let pyr = document.getElementsByClassName("pyr");
+        let comienzo = document.getElementById("comenzar");
+        let tiempo = document.getElementById("tiempo");
+        let ocultos = document.getElementById("ocultos");
+        let intervalo;
+
+        // Parámetros del juego
+        let pAcertadas;
+        let pFalladas;
+        let pRealizadas;
+        let correcto;
+
+
+        // Guardar el contenido del fichero ruta en archivoTxt
+        archivoTxt = new XMLHttpRequest();
+        archivoTxt.open("GET", ruta, true);
+        archivoTxt.send();
+
+        // Acceder al contenido del fichero ruta en archivoTxt
+        archivoTxt.onreadystatechange = function () {
+            if (archivoTxt.readyState == 4 && archivoTxt.status == 200) {
+                archivoTxtCopia = archivoTxt.responseText;
+                archivoTxt = archivoTxtCopia.split(";");
+                for (let i = 0; i < archivoTxt.length; i++) {
+                    preguntasYRespuestas.push(archivoTxt[i].split(":"));
+                    respuestasCorrectas.push(preguntasYRespuestas[i][1]);
+                }
+            }
+        }
+
+        // Función para mostrar la pregunta (aleatoria) y las respuestas
+        function cambiarPregunta() {
+            if (pFalladas == 3) {
+                clearInterval(intervalo);
+                finDePartida("incorrectas");
+            }
+            if (pRealizadas == 10) {
+                clearInterval(intervalo);
+                finDePartida("correctas");
+            }
+            // Si no es la primera pregunta hago pop
+            if (pRealizadas != 0) {
+                console.log(copiaPreguntas.splice(numeroPregunta, 1));
+                console.log(copiaRespuestasCorrectas.splice(numeroPregunta, 1));
+            }
+            numeroPregunta = Math.floor(Math.random() * (copiaPreguntas.length - 1));
+            console.log(copiaPreguntas.length - 1);
+            console.log(numeroPregunta);
+            respuestaUno = Math.floor(Math.random() * 2) + 1;
+            pyr[0].innerHTML = copiaPreguntas[numeroPregunta][0];
+            pyr[1].innerHTML = copiaPreguntas[numeroPregunta][respuestaUno];
+            pyr[2].innerHTML = copiaPreguntas[numeroPregunta][(respuestaUno == 1) ? 2 : 1];
+
+        }
+
+
+        // Fin de partida
+        function finDePartida(manera) {
+            ocultos.classList.add("oculto");
+            pyr[3].classList.remove("oculto");
+            puntos = ((pAcertadas + pFalladas) > 0) ? ((pAcertadas * 100) / (pAcertadas + pFalladas)) : 0;
+            switch (manera) {
+                case "tiempo":
+                    pyr[3].innerHTML = "Se acabó el tiempo!";
+                    if(pRealizadas == 0){
+                        pyr[3].innerHTML += " No has respondido ninguna pregunta cabrón!";
+                    }
+                case "incorrectas":
+                    pyr[3].innerHTML += (pFalladas == 0)? "" : "Fallaste " + pFalladas + " pregunta" + (pFalladas > 1)? "s." : "" + (pAcertadas > 0)? "" : "Aunque acertaste " + pAcertadas + " pregunta" + (pAcertadas > 1 ? "s" : "");
+                    break;
+                case "correctas":
+                    pyr[3].innerHTML = "¡Ganaste el trivial! " + ((pFalladas >= 1)? ("Aunque fallaste " + pFalladas + " pregunta" + ((pFalladas > 1)? "s." : ".")) : "Y sin fallar ninguna pregunta!");
+                    puntos += parseInt(tiempo.innerHTML);
+                    break;
+                default:
+                    console.log("Error en finDePartida");
+            }
+            pyr[3].innerHTML += "<br>Puntuación: " + puntos;
+        }
+
+        // Quitar clases
+        function quitarClases() {
+            for (let i = 0; i < pyr.length; i++) {
+                pyr[i].classList.remove("correcta");
+                pyr[i].classList.remove("incorrecta");
+            }
+        }
+
+        // Comenzar el juego
+
+        function comenzar() {
+            // Limpio valores y copio el array de preguntas original
+            clearInterval(intervalo);
+            pAcertadas = 0;
+            pFalladas = 0;
+            pRealizadas = 0;
+            tiempo.innerHTML = "50";
+            pyr[3].innerHTML = "";
+            pyr[3].classList.add("oculto");
+            copiaPreguntas = preguntasYRespuestas.slice();
+            copiaRespuestasCorrectas = respuestasCorrectas.slice();
+
+            intervalo = setInterval(function () {
+                tiempo.innerHTML = parseInt(tiempo.innerHTML) - 1;
+                if (parseInt(tiempo.innerHTML) < 0) {
+                    clearInterval(intervalo);
+                    finDePartida("tiempo");
+                }
+            }, 1000);
+            cambiarPregunta();
+            ocultos.classList.remove("oculto");
+
+        }
+
+        // Añado manejadores de eventos
+        comienzo.addEventListener("click", function () {
+            comenzar();
+        });
+
+        for (let i = 1; i <= 2; i++) {
+            pyr[i].addEventListener("click", () => {
+                if (copiaRespuestasCorrectas[numeroPregunta] == pyr[i].innerHTML) {
+                    ++pAcertadas;
+                    pyr[i].classList.add("correcta");
+                    correcto = true;
+                    setTimeout(quitarClases, 500);
+                } else {
+                    ++pFalladas;
+                    pyr[i].classList.add("incorrecta");
+                    correcto = false;
+                    setTimeout(quitarClases, 1000);
+                }
+                ++pRealizadas;
+                setTimeout(cambiarPregunta, (correcto) ? 500 : 1000);
+            });
+        }
+
+
+    </script>
+</body>
+
+</html>
